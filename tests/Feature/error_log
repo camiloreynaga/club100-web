@@ -1,0 +1,1 @@
+[26-May-2020 18:00:01 UTC] PHP Fatal error:  Class 'Tests\TestCase' not found in /home/festival/public_html/goodlife.pe/club/tests/Feature/ExampleTest.php on line 11
