@@ -23,11 +23,13 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin'], function() {
     Route::resource('category', 'CategoryController');
     Route::get('question/status/{id}/{status}', 'QuestionController@status')->name('questionStatus');
     Route::resource('question', 'QuestionController');
-    Route::get('setting', 'PagesController@settings')->name('setting');    
+    Route::get('setting', 'PagesController@settings')->name('setting');
     Route::get('profile', 'PagesController@profile')->name('profile');
     Route::get('notification', 'PagesController@notification')->name('notification');
     Route::post('sendNotification', 'PagesController@sendNotification')->name('sendNotification');
-    Route::get('tutorial', 'PagesController@tutorial')->name('tutorial');
+    //Route::get('tutorial', 'PagesController@tutorial')->name('tutorial');
+    Route::resource('tutorial', 'AppNotificationController');
+    Route::get('tutorial/status/{id}/{status}', 'AppNotificationController@status')->name('tutorialStatus');
     Route::post('addTutorial', 'PagesController@addTutorial')->name('addTutorial');
     Route::get('upload', 'PagesController@upload')->name('upload');
     Route::post('uploadData', 'PagesController@uploadData')->name('uploadData');

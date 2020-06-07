@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('pagetitle', 'Edit Question - ' . config('app.name'))
+@section('pagetitle', 'Edit User - ' . config('app.name'))
 
 @section('content')
     <div class="row">
@@ -8,7 +8,7 @@
             <!--breadcrumbs start -->
             <ul class="breadcrumb">
                 <li><a href="{{ Route('dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li class="active">Question</li>
+                <li class="active">User</li>
             </ul>
             <!--breadcrumbs end -->
         </div>
@@ -19,11 +19,11 @@
             <section class="panel">
                 @include('admin.partial.error')
                 <header class="panel-heading">
-                    Edit Question
+                    Edit User
                 </header>
                 <div class="panel-body">
                     {!! Form::model($question, ['route' => ['question.update', $question->id], 'method' => 'PATCH', 'files' => true]) !!}
-                        @include('admin.question.partial.form', ['btntitle' => 'Update Question'])
+                        @include('admin.question.partial.form', ['btntitle' => 'Update User'])
                     {!! Form::close() !!}
                 </div>
             </section>

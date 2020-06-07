@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('pagetitle', 'Questions - ' . config('app.name'))
+@section('pagetitle', 'User List - ' . config('app.name'))
 
 @section('content')
     @if(session()->has('message'))
@@ -16,7 +16,7 @@
             <!--breadcrumbs start -->
             <ul class="breadcrumb">
                 <li><a href="{{ Route('dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li class="active">Question</li>
+                <li class="active">User</li>
             </ul>
             <!--breadcrumbs end -->
         </div>
@@ -28,7 +28,7 @@
             <div class="input-group">
                 <div class="input-group-btn search-panel">
                     <button type="button" class="btn btn-disabled" data-toggle="dropdown">
-                        <span>Filter by Category: </span> 
+                        <span>Filter by Plan: </span>
                     </button>
                 </div>      
                 <select name="category_select" class="form-control" id="category_select">
@@ -45,7 +45,7 @@
             <div class="input-group">
                 <div class="input-group-btn search-panel">
                     <button type="button" class="btn btn-disabled" data-toggle="dropdown">
-                        <span>Search by Question Title: </span> 
+                        <span>Search by User Name: </span>
                     </button>
                 </div>   
                 <input type="hidden" name="search_url" id="search_url" value="{{ URL::to('/') . '/admin/question/search/' }}">   
@@ -63,7 +63,7 @@
         <div class="col-xs-12">
             <div class="panel">                
                 <header class="panel-heading">
-                    Questions
+                    User List
                     <a href="{{ Route('question.create') }}" class="btn btn-primary pull-right" style="position: relative;top: -7px;right: 10px;">Add New</a>
                 </header>
                 <div class="panel-body table-responsive">
@@ -73,15 +73,11 @@
                         <thead>                          
                             <tr>
                                 <th>SL</th>
-                                <th>Title</th>   
-                                <th>Category</th>
-                                <th>Question Type</th>
-                                <th>Choice A</th>  
-                                <th>Choice B</th>
-                                <th>Choice C</th>
-                                <th>Choice D</th>
-                                <th>Choice E</th>
-                                <th>Answer</th>
+                                <th>User Name</th>
+                                <th>DNI</th>
+                                <th>Plan</th>
+                                <th>Email</th>
+                                <th>Password</th>
                                 <th>Added On</th>
                                 <th>Status</th>
                                 <th>Action</th>
@@ -90,7 +86,8 @@
                         @foreach($questions as $key => $question)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{!! $question->title !!}</td>
+                            <td>{!! $question->name !!}</td>
+                            <td>{!! $question->dni !!}</td>
                             <td>
                                 @if($question->category)
                                     {{ $question->category->title }}
@@ -98,13 +95,8 @@
                                     {{ "N/A" }}
                                 @endif                                
                             </td>  
-                            <td>{{ ucfirst($question->question_type) }}</td>
-                            <td>{!! $question->choice_a !!}</td> 
-                            <td>{!! $question->choice_b !!}</td>  
-                            <td>{!! $question->choice_c ? $question->choice_c : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>  
-                            <td>{!! $question->choice_d ? $question->choice_d : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>  
-                            <td>{!! $question->choice_e ? $question->choice_e : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>
-                            <td>{!! $question->answer !!}</td>                          
+                            <td>{!! $question->email !!}</td>
+                            <td>{!! $question->password !!}</td>
                             <td>{{ $question->created_at->diffForHumans() }}</td>
                             <td>{!! $question->status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>' !!}</td>
                             <td>

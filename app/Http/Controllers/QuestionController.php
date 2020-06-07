@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use App\Question;
+use App\AppUser;
 use Auth;
 
 class QuestionController extends Controller
@@ -16,7 +17,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        $questions = Question::orderBy('id', 'DESC')->paginate(10);
+        $questions = AppUser::orderBy('id', 'DESC')->paginate(10);
         $categories = Category::withCount(['question'=>function($q) {
                         return $q->where('status', 1);
                     }])->orderBy('title', 'ASC')->get();
@@ -57,51 +58,20 @@ class QuestionController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'name' => 'required',
             'category_id' => 'required',
-            'question_type' => 'required',
-            'thumbnail' => 'required_if:question_type,photo|mimes:jpeg,jpg,png,bmp,gif',
-            'number_of_answer'  => 'required',
-            'choice_a' => 'required',
-            'choice_b' => 'required',
-            'choice_c' => 'required_if:number_of_answer,3|required_if:number_of_answer,4',
-            'choice_d' => 'required_if:number_of_answer,4|required_if:number_of_answer,5',
-            'choice_e' => 'required_if:number_of_answer,5',          
-            'answer' => 'required',
+            'email' => 'required',
+            'password' => 'required'
         ]);             
 
         $data = $request->all();
-         
-        $data['title'] = $this->format_html_string($data['title']); 
-        $data['choice_a'] = $this->format_html_string($data['choice_a']); 
-        $data['choice_b'] = $this->format_html_string($data['choice_b']);       
-        
-        if($data['choice_c'] != null){
-             $data['choice_c'] = $this->format_html_string($data['choice_c']); 
-        }        
-        if($data['choice_d'] != null){
-             $data['choice_d'] = $this->format_html_string($data['choice_d']); 
-        }  
-        if($data['choice_e'] != null){
-             $data['choice_e'] = $this->format_html_string($data['choice_e']); 
-        }        
-        if($data['explanation'] != null){
-            $data['explanation'] = $this->format_html_string($data['explanation']); 
-        }        
-        $data['answer'] = $this->format_html_string($data[$data['answer']]); 
+        $data['token'] = "";
+        $data['status'] = 1;
 
-        if($request->file('thumbnail')){
-            $file = $request->file('thumbnail');
-            $mimes = $file->getClientMimeType();
-            $name = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(base_path() . '/uploads/question/', $name); 
-            $data['thumbnail'] = $name;            
-        } 
-
-        $question = new Question($data);        
+        $question = new AppUser($data);
         $question->save();
 
-        return redirect('admin/question')->withType('success')->withMessage('Question Added');
+        return redirect('admin/question')->withType('success')->withMessage('User Added');
     }
 
     /**
@@ -112,7 +82,7 @@ class QuestionController extends Controller
      */
     public function show($id)
     {
-        $question = Question::findorfail($id);
+        $question = AppUser::findorfail($id);
         return view('admin.question.show', compact('question'));
     }
 
@@ -124,7 +94,7 @@ class QuestionController extends Controller
      */
     public function edit($id)
     {
-        $question = Question::findorfail($id);
+        $question = AppUser::findorfail($id);
         $categories = Category::where('status', 1)->pluck('title', 'id');
         return view('admin.question.edit', compact('question', 'categories'));
     }
@@ -139,50 +109,17 @@ class QuestionController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'name' => 'required',
             'category_id' => 'required',
-            'question_type' => 'required',
-            'thumbnail' => 'mimes:jpeg,jpg,png,bmp,gif',
-            'number_of_answer'  => 'required',
-            'choice_a' => 'required',
-            'choice_b' => 'required',
-            'choice_c' => 'required_if:number_of_answer,3|required_if:number_of_answer,4',
-            'choice_d' => 'required_if:number_of_answer,4|required_if:number_of_answer,5',
-            'choice_e' => 'required_if:number_of_answer,5',             
-            'answer' => 'required',
-        ]);             
+            'email' => 'required',
+            'password' => 'required'
+        ]);
 
-        $question = Question::findorfail($id);
-        $data = $request->all(); 
-
-        $data['title'] = $this->format_html_string($data['title']); 
-        $data['choice_a'] = $this->format_html_string($data['choice_a']); 
-        $data['choice_b'] = $this->format_html_string($data['choice_b']);       
-        
-        if($data['choice_c'] != null){
-             $data['choice_c'] = $this->format_html_string($data['choice_c']); 
-        }        
-        if($data['choice_d'] != null){
-             $data['choice_d'] = $this->format_html_string($data['choice_d']); 
-        }        
-        if($data['choice_e'] != null){
-             $data['choice_e'] = $this->format_html_string($data['choice_e']); 
-        } 
-        if($data['explanation'] != null){
-            $data['explanation'] = $this->format_html_string($data['explanation']); 
-        }      
-        $data['answer'] = $this->format_html_string($data[$data['answer']]); 
-
-        if($request->file('thumbnail')){
-            $file = $request->file('thumbnail');
-            $mimes = $file->getClientMimeType();
-            $name = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(base_path() . '/uploads/question/', $name); 
-            $data['thumbnail'] = $name;         
-        } 
+        $question = AppUser::findorfail($id);
+        $data = $request->all();
         
         $question->update($data);        
-        return redirect('admin/question')->withType('success')->withMessage('Question Updated');
+        return redirect('admin/question')->withType('success')->withMessage('User Updated');
     }
 
     /**
@@ -193,9 +130,9 @@ class QuestionController extends Controller
      */
     public function destroy($id)
     {
-        $question = Question::findorfail($id);
+        $question = AppUser::findorfail($id);
         $question->destroy($id);
-        return redirect('admin/question')->withType('danger')->withMessage('Question Deleted');
+        return redirect('admin/question')->withType('danger')->withMessage('User Deleted');
     }
 
     /**
@@ -206,14 +143,14 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function status($id, $status){
-        $question = Question::findorfail($id);
+        $question = AppUser::findorfail($id);
         if($status == 0){
             $data['status'] = 1;
-            $message = 'Selected Question is Active now';
+            $message = 'Selected User is Active now';
         }
         else{
             $data['status'] = 0;
-            $message = 'Selected Question is Inactive now';
+            $message = 'Selected User is Inactive now';
         }
         $question->update($data);
         return redirect('admin/question')->withType('success')->withMessage($message); 
@@ -227,10 +164,10 @@ class QuestionController extends Controller
      */
     public function filterCategory($id){
         if($id == 'all'){
-            $questions = Question::orderBy('id', 'DESC')->paginate(10);
+            $questions = AppUser::orderBy('id', 'DESC')->paginate(10);
         }
         else{
-            $questions = Question::orderBy('id', 'DESC')->where('category_id', $id)->paginate(10);
+            $questions = AppUser::orderBy('id', 'DESC')->where('category_id', $id)->paginate(10);
         }        
         $categories = Category::withCount(['question'=>function($q) {
                         return $q->where('status', 1);
@@ -245,7 +182,7 @@ class QuestionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function searchQuestion($title){
-        $questions = Question::orderBy('id', 'DESC')->where('title', 'like', '%' . $title . '%')->paginate(10);
+        $questions = AppUser::orderBy('id', 'DESC')->where('name', 'like', '%' . $title . '%')->paginate(10);
         $categories = Category::withCount(['question'=>function($q) {
                         return $q->where('status', 1);
                     }])->orderBy('title', 'ASC')->get();

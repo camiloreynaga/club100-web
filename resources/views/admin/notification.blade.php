@@ -42,8 +42,8 @@
                                     {{ Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Message', 'size' => '30x3']) }}
                                 </div>
                                 <div class="form-group">
-                                    {!! Form::label('image', 'Image URL(if have any)'); !!}
-                                    {!! Form::text('image', null, ['class' => 'form-control', 'placeholder' => 'Image URL']); !!}
+                                    {!! Form::label('category_id', 'Plan'); !!}
+                                    {!! Form::select('category_id', $categories, null, ['class' => 'form-control']); !!}
                                 </div>
                             </div>
 

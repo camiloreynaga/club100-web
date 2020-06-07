@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('pagetitle', 'Edit Category - ' . config('app.name'))
+@section('pagetitle', 'Edit Plan - ' . config('app.name'))
 
 @section('content')
     <div class="row">
@@ -8,7 +8,7 @@
             <!--breadcrumbs start -->
             <ul class="breadcrumb">
                 <li><a href="{{ Route('dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li class="active">Category</li>
+                <li class="active">Plan</li>
             </ul>
             <!--breadcrumbs end -->
         </div>
@@ -19,11 +19,11 @@
             <section class="panel">
                 @include('admin.partial.error')
                 <header class="panel-heading">
-                    Edit Category
+                    Edit Plan
                 </header>
                 <div class="panel-body">
                     {!! Form::model($category, ['route' => ['category.update', $category->id], 'method' => 'PATCH', 'files' => true]) !!}
-                        @include('admin.category.partial.form', ['btntitle' => 'Update Category'])
+                        @include('admin.category.partial.form', ['btntitle' => 'Update Plan'])
                     {!! Form::close() !!}
                 </div>
             </section>

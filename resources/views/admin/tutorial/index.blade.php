@@ -16,7 +16,7 @@
             <!--breadcrumbs start -->
             <ul class="breadcrumb">
                 <li><a href="{{ Route('dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li class="active">Tutorial</li>
+                <li class="active">Notification List</li>
             </ul>
             <!--breadcrumbs end -->
         </div>
@@ -26,22 +26,63 @@
         <div class="col-xs-12">
             <div class="panel">                
                 <header class="panel-heading">
-                    Tutorial
+                    Notification
                 </header>
-                <div class="panel-body table-responsive">
-                     {!! Form::open(array('route' => 'addTutorial')) !!}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    {!! Form::label('content', 'Content'); !!}
-                                    {!! Form::textarea('content', null, ['class' => 'form-control tutorial', 'placeholder' => 'Content', 'style' => 'height: 400px;']); !!}
-                                </div>        
-                            </div>
-                        </div>                        
+                <div class="panel-body table-responsive" style="width: 100%;">
+                    @if(count($categories) > 0)
+                    <div class="table-responsive">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>SL</th>
+                            <th>Title</th>
+                            <th>Message</th>
+                            <th>Plan</th>
+                            <th>Status</th>
+                            <th>Added On</th>
+                            <th>Action</th>
+                        </tr>
+                        @foreach($categories as $key => $category)
+                        <tr>
+                            <td>{{ ++$key }}</td>
+                            <td>{{ $category->title }}</td>
+                            <td>{{ $category->message }}</td>
+                            <td>
+                                @if($category->category)
+                                    {{ $category->category->title }}
+                                @else
+                                    {{ "N/A" }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($category->status==0)
+                                    {{ "Stand by" }}
+                                @else
+                                    @if($category->status==1)
+                                        {{ "Win" }}
+                                    @else
+                                        {{ "Lose" }}
+                                    @endif
+                                @endif
+                            </td>
+                            <td>{{ $category->created_at->diffForHumans() }}</td>
+                            <td>
+                                <a href="{{ Route('tutorialStatus', ['id' => $category->id, 'status' => '1']) }}"><button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Change Status to WIN">WIN</button></a>
+                                <a href="{{ Route('tutorialStatus', ['id' => $category->id, 'status' => '2']) }}"><button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Change Status to LOSE">LOSE</button></a>
+                                {{ Form::open(array('route' => array('tutorial.destroy', $category->id), 'method' => 'delete', 'style' => 'display:initial;')) }}
+                                    <button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                {{ Form::close() }}
+                            </td>
+                        </tr>
+                        @endforeach
+                    </table>
+                    </div>
 
-                        {!! Form::submit('Submit', ['class' => 'btn btn-info btn-fill pull-right']); !!}
-                        <div class="clearfix"></div>
-                    {!! Form::close() !!}
+                    <p>&nbsp;</p>
+
+                    {{ $categories->render() }}
+                    @else
+                        <p><h5 style="color:#F00;">No Data</h5></p>
+                    @endif
                 </div><!-- /.box-body -->
             </div><!-- /.box -->
         </div>

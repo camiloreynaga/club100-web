@@ -1,6 +1,6 @@
 @extends('admin.layout.master')
 
-@section('pagetitle', 'Create Category - ' . config('app.name'))
+@section('pagetitle', 'Create Plan - ' . config('app.name'))
 
 @section('content')
     <div class="row">
@@ -8,7 +8,7 @@
             <!--breadcrumbs start -->
             <ul class="breadcrumb">
                 <li><a href="{{ Route('dashboard') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-                <li class="active">Category</li>
+                <li class="active">Plan List</li>
             </ul>
             <!--breadcrumbs end -->
         </div>
@@ -19,11 +19,11 @@
             <section class="panel">
                 @include('admin.partial.error')
                 <header class="panel-heading">
-                    Add New Category
+                    Add New Plan
                 </header>
                 <div class="panel-body">
                     {!! Form::open(array('route' => 'category.store', 'files' => true)) !!}
-                        @include('admin.category.partial.form', ['btntitle' => 'Add Category'])
+                        @include('admin.category.partial.form', ['btntitle' => 'Add Plan'])
                     {!! Form::close() !!}
                 </div>
             </section>

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\AppNotification;
 use App\Category;
 use Auth;
 
-class CategoryController extends Controller
+class AppNotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +16,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount(['question'=>function($q) {
-                        return $q->where('status', 1);
-                    }])->orderBy('id', 'DESC')->paginate(10);
-        return view('admin.category.index', compact('categories'));
+        $categories = AppNotification::orderBy('id', 'DESC')->paginate(10);
+        return view('admin.tutorial.index', compact('categories'));
     }
 
     /**
@@ -80,9 +79,9 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = Category::findorfail($id);
-        $categories = Category::where('id', '!=', $id)->pluck('title', 'id');
-        return view('admin.category.edit', compact('category', 'categories'));
+        $category = AppNotification::findorfail($id);
+        $categories = Category::where('status', 1)->pluck('title', 'id');
+        return view('admin.tutorial.edit', compact('category', 'categories'));
     }
 
     /**
@@ -123,10 +122,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::findorfail($id);
+        $category = AppNotification::findorfail($id);
         $category->destroy($id);
-        $category->question()->update(['status' => 0]);
-        return redirect('admin/category')->withType('danger')->withMessage('Plan Deleted');
+        return redirect('admin/tutorial')->withType('danger')->withMessage('Notification Deleted');
     }    
 
     /**
@@ -137,17 +135,20 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function status($id, $status){
-        $category = Category::findorfail($id);
-        if($status == 0){
+        $category = AppNotification::findorfail($id);
+        if($status == 1){
             $data['status'] = 1;
-            $message = 'Selected Category is Active now';
+            $message = 'Selected Notification is WIN now';
         }
         else{
-            $data['status'] = 0;
-            $message = 'Selected Category is Inactive now';
+            $data['status'] = 2;
+            $message = 'Selected Notification is LOSE now';
         }
-        $category->update($data);
-        return redirect('admin/category')->withType('success')->withMessage($message); 
+        $flights = AppNotification::where('id', $id)
+            ->update(['status' => $status]);
+
+        //$category->update($data);
+        return redirect('admin/tutorial')->withType('success')->withMessage($message);
     }
 
     public function order(){

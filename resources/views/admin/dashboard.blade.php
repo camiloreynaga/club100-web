@@ -9,7 +9,7 @@
             <span class="sm-st-icon st-violet"><i class="fa fa-check-square-o"></i></span>
             <div class="sm-st-info">
                <span>{{ $total_category }}</span>
-               Total Categories
+               Total Plans
             </div>
          </div>
       </div>
@@ -18,7 +18,7 @@
             <span class="sm-st-icon st-blue"><i class="fa fa-envelope-o"></i></span>
             <div class="sm-st-info">
                <span>{{ $total_question }}</span>
-               Total Questions
+               Total Users
             </div>
          </div>
       </div>
@@ -28,7 +28,7 @@
       <div class="col-md-5">
          <section class="panel tasks-widget">
             <header class="panel-heading">
-               Recently added Categories
+               Recently added Plans
             </header>
             <div class="panel-body">
                @if(count($categories) > 0)
@@ -37,17 +37,15 @@
                         <tr>
                             <th>SL</th>
                             <th>Title</th> 
-                            <th>Parent Category</th>
-                            <th>Quetions</th>
+                            <th>Description</th>
                             <th>Added On</th>
                             <th>Status</th>
                         </tr>
                         @foreach($categories as $key => $category)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $category->title }}</td>  
-                            <td>{!! $category->parent['title'] ? $category->parent['title'] : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>
-                            <td>{{ $category->question_count }}</td>
+                            <td>{{ $category->title }}</td>
+                            <td>{{ $category->description }}</td>
                             <td>{{ $category->created_at->diffForHumans() }}</td>
                             <td>{!! $category->status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>' !!}</td>
                         </tr>
@@ -58,8 +56,8 @@
                         <p><h5 style="color:#F00;">No Data</h5></p>
                     @endif
                <div class=" add-task-row">
-                  <a class="btn btn-success btn-sm pull-left" href="{{ Route('category.create') }}">Add New Category</a>
-                  <a class="btn btn-default btn-sm pull-right" href="{{ Route('category.index') }}">See All Categories</a>
+                  <a class="btn btn-success btn-sm pull-left" href="{{ Route('category.create') }}">Add New Plan</a>
+                  <a class="btn btn-default btn-sm pull-right" href="{{ Route('category.index') }}">See All Plans</a>
                </div>
             </div>
          </section>
@@ -68,7 +66,7 @@
       <div class="col-md-7">
          <section class="panel tasks-widget">
             <header class="panel-heading">
-              Recently added Questions
+              Recently added Users
             </header>
             <div class="panel-body">
                @if(count($questions) > 0)
@@ -76,21 +74,17 @@
                     <table class="table table-hover">
                         <tr>
                             <th>SL</th>
-                            <th>Title</th>   
-                            <th>Category</th>
-                            <th>Choice A</th>  
-                            <th>Choice B</th>
-                            <th>Choice C</th>
-                            <th>Choice D</th>
-                            <th>Choice E</th>
-                            <th>Answer</th>
+                            <th>User Name</th>
+                            <th>Plan</th>
+                            <th>Email</th>
+                            <th>Password</th>
                             <th>Added On</th>
                             <th>Status</th>
                         </tr>
                         @foreach($questions as $key => $question)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{!! $question->title !!}</td>
+                            <td>{!! $question->name !!}</td>
                             <td>
                                 @if($question->category)
                                     {{ $question->category->title }}
@@ -98,13 +92,9 @@
                                     {{ "N/A" }}
                                 @endif                                
                             </td>  
-                            <td>{!! $question->choice_a !!}</td> 
-                            <td>{!! $question->choice_b !!}</td>  
-                            <td>{!! $question->choice_c ? $question->choice_c : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>  
-                            <td>{!! $question->choice_d ? $question->choice_d : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td> 
-                            <td>{!! $question->choice_e ? $question->choice_e : '<span class="badge badge-dark" style="padding: 5px 10px;">N/A</span>' !!}</td>  
-                            <td>{!! $question->answer !!}</td>     
-                            <td>{{ $question->created_at->diffForHumans() }}</td>                      
+                            <td>{!! $question->email !!}</td>
+                            <td>{!! $question->password !!}</td> 
+                            <td>{{ $question->created_at->diffForHumans() }}</td>
                             <td>{!! $question->status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>' !!}</td>                            
                         </tr>
                         @endforeach
@@ -114,8 +104,8 @@
                         <p><h5 style="color:#F00;">No Data</h5></p>
                     @endif
                <div class=" add-task-row">
-                  <a class="btn btn-success btn-sm pull-left" href="{{ Route('question.create') }}">Add New Questions</a>
-                  <a class="btn btn-default btn-sm pull-right" href="{{ Route('question.index') }}">See All Questions</a>
+                  <a class="btn btn-success btn-sm pull-left" href="{{ Route('question.create') }}">Add New User</a>
+                  <a class="btn btn-default btn-sm pull-right" href="{{ Route('question.index') }}">See All Users</a>
                </div>
             </div>
          </section>

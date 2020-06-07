@@ -30,3 +30,8 @@ Route::get('category/{id}/questions', 'PagesController@apiShowSingleCategoryQues
 Route::get('questions', 'PagesController@apiShowQuestions');
 Route::get('question/{id}', 'PagesController@apiShowSingleQuestion');
 Route::get('tutorial', 'PagesController@apiShowTutorial');
+Route::post('user/{name}/{email}/{password}/{token}', 'PagesController@apiSignupUser');
+Route::post('addUser', 'PagesController@addUser')->name('addUser');
+Route::post('login', 'PagesController@login')->name('login');
+Route::post('getNotification', 'PagesController@getNotification')->name('getNotification');
+Route::post('forgotPassword', 'PagesController@forgotPassword')->name('forgotPassword');
