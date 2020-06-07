@@ -32,18 +32,62 @@
                 <div class="panel-body">
                     {!! Form::open(array('route' => 'sendNotification')) !!}
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    {!! Form::label('title', 'Title'); !!}
-                                    {!! Form::text('title', null, ['class' => 'form-control', 'placeholder' => 'Title']); !!}
-                                </div>
-                                <div class="form-group">
-                                    {!! Form::label('message', 'Message'); !!}
-                                    {{ Form::textarea('message', null, ['class' => 'form-control', 'placeholder' => 'Message', 'size' => '30x3']) }}
-                                </div>
+                            <div class="col-md-6">
+
                                 <div class="form-group">
                                     {!! Form::label('category_id', 'Plan'); !!}
                                     {!! Form::select('category_id', $categories, null, ['class' => 'form-control']); !!}
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="liga" value="MUNDIAL" checked>
+                                        Mundial
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="liga" value="PREMIER" >
+                                        Premier
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="liga" value="SUPER LIGA" >
+                                        Superliga
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="liga" value="" >
+                                        Ninguno (en blanco)
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    {!! Form::label('title', 'Hora / Mensaje'); !!}
+                                    {!! Form::textarea('title', null, ['required', 'class' => 'form-control', 'placeholder' => 'Hora / Mensaje', 'size' => '30x3']); !!}
+                                </div>
+                                <div class="form-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="apuesta" value="0.5+" checked>
+                                        0.5+
+                                    </label>
+                                    <label class="radio-inline">
+                                    
+                                        <input type="radio" name="apuesta" value="L o E" >
+                                        Local o Empate
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="apuesta" value="E o V" >
+                                        Empate o Visita
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="apuesta" value="L o V" >
+                                        Local o Visita
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="apuesta" value="" >
+                                        Ninguno (en blanco)
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    {!! Form::label('message', 'Ganancia'); !!}
+                                    {{ Form::text('message', null, ['required','class' => 'form-control', 'placeholder' => 'Ganancia']) }}
+                                    
                                 </div>
                             </div>
 

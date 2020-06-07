@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\AppUser;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -27,7 +29,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/register';
 
     /**
      * Create a new controller instance.
@@ -48,7 +50,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -60,20 +61,38 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
+
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
-    }
+        $flights = AppUser::where('email', $data['email'])->get();
+        if(count($flights) == 0){
+            return AppUser::create([
+                'name' => $data['name'],
+                'dni' => $data['dni'],
+                'email' => $data['email'],
+                'phone' => $data['phone'],
+                'user' => $data['user'],
+                'password' => $data['password'],
+                'turn' => $data['turn'],
+                'day' => 'l-m-v',
+                'category_id' => $data['turn'],
+                'status' => 0
+            ]);
+        }else{
+        }
 
+    }
+    function alert($msg) {
+        echo "<script type='text/javascript'>alert('$msg');</script>";
+    }
+//    public function store(Request $request)
+//    {
+//        echo "456";
+//        return;
+//    }
+/*
     public function register() {
-        return redirect('/');
+        return redirect('/register');
     }
-
-    public function showRegistrationForm() {
-        return redirect('/');
-    }
+*/
 }

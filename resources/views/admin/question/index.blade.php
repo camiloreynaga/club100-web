@@ -74,7 +74,6 @@
                             <tr>
                                 <th>SL</th>
                                 <th>User Name</th>
-                                <th>DNI</th>
                                 <th>Plan</th>
                                 <th>Email</th>
                                 <th>Password</th>
@@ -87,7 +86,6 @@
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{!! $question->name !!}</td>
-                            <td>{!! $question->dni !!}</td>
                             <td>
                                 @if($question->category)
                                     {{ $question->category->title }}

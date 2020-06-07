@@ -123,9 +123,19 @@ class PagesController extends Controller
         }
     }
 
-    public function sendNotification(Request $request){
-        $notification_data = $request->all();
+    private function UnirNotificacion($notification_data)
+    {
+        //liga + hora + tipo apuesta 
+        $notification_data['title']= $notification_data['liga'].' '.$notification_data['title'].' '.$notification_data['apuesta'];
+        $notification_data['message'] = $notification_data['message'] .' %';
+        return $notification_data;
 
+    }
+
+    public function sendNotification(Request $request){
+
+        $notification_data = $request->all();
+        $notification_data= $this->UnirNotificacion($notification_data);
         $notification = new AppNotification($notification_data);
         $notification->save();
         $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
@@ -141,7 +151,7 @@ class PagesController extends Controller
                 'message' => 'required',
             ]);
 
-            $data = array("to" => "/topics/" . env("FIREBASE_TOPIC", ""), "notification" => array( "title" => $request['title'], "body" => $request['message'], "image" => $request['image']));
+            $data = array("to" => "/topics/" . env("FIREBASE_TOPIC", ""), "notification" => array( "title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image']));
             //$data_string = json_encode($data);
             //return "The Json Data : ".$data_string;
 
@@ -154,7 +164,7 @@ class PagesController extends Controller
             $fields = array
             (
                 'registration_ids'     => $array_token,
-                'data'            => array( "title" => $request['title'], "body" => $request['message'], "image" => $request['image'])
+                'data'            => array( "title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image'])
             );
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -248,16 +258,15 @@ class PagesController extends Controller
                 $category_id = $item['category_id'];
                 $device_token = $item['token'];
             }
-            $flights = AppUser::where($matchThese)
-                ->update(['token' => $data['token']]);
-            $ret = array(
-                "result" => "success",
-                "name" => $name,
-                "category_id" => "" . $category_id
-            );
-            /*
-            if($device_token == "") {
 
+            if($device_token == "") {
+                $flights = AppUser::where($matchThese)
+                    ->update(['token' => $data['token']]);
+                $ret = array(
+                    "result" => "success",
+                    "name" => $name,
+                    "category_id" => "" . $category_id
+                );
             }else{
                 if($device_token == $data['token']){
                     $ret = array(
@@ -270,7 +279,7 @@ class PagesController extends Controller
                         "result" => "token is wrong"
                     );
                 }
-            }*/
+            }
         }
 
         return $ret;

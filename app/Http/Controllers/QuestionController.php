@@ -64,9 +64,10 @@ class QuestionController extends Controller
             'password' => 'required'
         ]);             
 
-        $data = $request->all();
+        $data = $request->all(); 
         $data['token'] = "";
         $data['status'] = 1;
+        //$data['category_id'] = 0;
 
         $question = new AppUser($data);
         $question->save();
