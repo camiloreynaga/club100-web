@@ -98,11 +98,12 @@
                             <td>{{ $question->created_at->diffForHumans() }}</td>
                             <td>{!! $question->status == 1 ? '<span class="label label-success">Active</span>' : '<span class="label label-danger">Inactive</span>' !!}</td>
                             <td>
-                                <a href="{{ Route('question.show', $question->id) }}"><button class="btn btn-primary btn-sm">View Details</button></a>
+                                <!-- <a href="{{ Route('question.show', $question->id) }}"><button class="btn btn-primary btn-sm">View Details</button></a> -->
+                                <a href="{{ Route('questionRemoveToken', $question->id) }}"><button class="btn btn-primary btn-sm"  onclick="return confirm('¿Desea borrar token de {{$question->name}}.?')">Borrar Token</button></a>
                                 <a href="{{ Route('questionStatus', ['id' => $question->id, 'status' => $question->status]) }}"><button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Change Status to {{ $question->status == 1 ? 'Inactive' : 'Active' }}"><i class="fa fa-check"></i></button></a>
                                 <a href="{{ Route('question.edit', $question->id) }}"><button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Edit"><i class="fa fa-pencil"></i></button></a>
                                 {{ Form::open(array('route' => array('question.destroy', $question->id), 'method' => 'delete', 'style' => 'display:initial;')) }}
-                                    <button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Delete"><i class="fa fa-times"></i></button>
+                                    <button data-placement="top" data-toggle="tooltip" class="btn btn-default btn-sm tooltips" data-original-title="Delete" onclick="return confirm('¿Desea eliminar al usuario {{$question->name}}?')"><i class="fa fa-times"></i></button>
                                 {{ Form::close() }}
                             </td>
                         </tr>

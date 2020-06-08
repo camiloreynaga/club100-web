@@ -147,14 +147,29 @@ class QuestionController extends Controller
         $question = AppUser::findorfail($id);
         if($status == 0){
             $data['status'] = 1;
-            $message = 'Selected User is Active now';
+            $message = "Usuario {$question->name} está Activo ahora";
         }
         else{
             $data['status'] = 0;
-            $message = 'Selected User is Inactive now';
+            $message = "Usuario {$question->name} está Inactivo ahora";
         }
         $question->update($data);
         return redirect('admin/question')->withType('success')->withMessage($message); 
+    }
+    /**
+     * Change status of the specified resource from storage.
+     *
+     * @param  int  $id
+     * @param  int  $status
+     * @return \Illuminate\Http\Response
+     */
+    public function removeToken($id){
+        $question = AppUser::findorfail($id);
+        // dd($question);
+        $data['token'] = null;
+        $message = "Usuario {$question->name}, Token borrado con éxito ";
+        $question->update($data);
+        return redirect('admin/question')->withType('primary')->withMessage($message); 
     }
 
     /**

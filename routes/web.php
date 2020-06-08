@@ -22,6 +22,7 @@ Route::group(['middleware' => ['auth'], 'prefix' => 'admin'], function() {
     Route::post('category/changeOrder', 'CategoryController@changeOrder')->name('categoryChangeOrder');
     Route::resource('category', 'CategoryController');
     Route::get('question/status/{id}/{status}', 'QuestionController@status')->name('questionStatus');
+    Route::get('question/removeToken/{id}', 'QuestionController@removeToken')->name('questionRemoveToken');
     Route::resource('question', 'QuestionController');
     Route::get('setting', 'PagesController@settings')->name('setting');
     Route::get('profile', 'PagesController@profile')->name('profile');
