@@ -127,7 +127,7 @@ class PagesController extends Controller
     {
         //liga + hora + tipo apuesta 
         $notification_data['title']= $notification_data['liga'].' '.$notification_data['title'].' '.$notification_data['apuesta'];
-        $notification_data['message'] = $notification_data['message'] .' %';
+        $notification_data['message'] = $notification_data['message'] .' '.$notification_data['porcentaje'];
         return $notification_data;
 
     }
@@ -136,9 +136,18 @@ class PagesController extends Controller
 
         $notification_data = $request->all();
         $notification_data= $this->UnirNotificacion($notification_data);
+        
         $notification = new AppNotification($notification_data);
         $notification->save();
-        $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
+        
+        //obteniendo a todos los usuarios activos
+        if( isset($notification_data['grupo']) && $notification_data['grupo']=='on')
+            $flights = AppUser::where('status', 1)->get();
+        else
+            $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
+
+        //dd($flights);
+        
         $array_token = array();
         foreach($flights as $item){
             array_push($array_token, $item['token']);

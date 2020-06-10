@@ -35,6 +35,9 @@
                             <div class="col-md-6">
 
                                 <div class="form-group">
+                                    <div class="form-check">
+                                        <label><input type="checkbox" name="grupo" >Todos</label>
+                                    </div>
                                     {!! Form::label('category_id', 'Plan'); !!}
                                     {!! Form::select('category_id', $categories, null, ['class' => 'form-control']); !!}
                                 </div>
@@ -88,6 +91,18 @@
                                     {!! Form::label('message', 'Ganancia'); !!}
                                     {{ Form::text('message', null, ['required','class' => 'form-control', 'placeholder' => 'Ganancia']) }}
                                     
+                                </div>
+                                <div class="form-group">
+                                    
+                                   
+                                    <label class="radio-inline">
+                                        <input type="radio" name="porcentaje" value="%" checked >
+                                        %
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="porcentaje" value="" >
+                                        Ninguno (en blanco)
+                                    </label>
                                 </div>
                             </div>
 
