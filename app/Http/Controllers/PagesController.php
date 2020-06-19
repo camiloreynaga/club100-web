@@ -144,9 +144,12 @@ class PagesController extends Controller
         if( isset($notification_data['grupo']) && $notification_data['grupo']=='on')
             $flights = AppUser::where('status', 1)->get();
         else
-            $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
+            $flights = AppUser::where(
+                ['category_id'=> $notification_data['category_id'],
+                'status'=>1])
+                ->get();
 
-        //dd($flights);
+        // dd($flights);
         
         $array_token = array();
         foreach($flights as $item){
