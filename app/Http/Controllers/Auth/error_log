@@ -1,1 +1,0 @@
-[31-May-2020 20:27:21 UTC] PHP Fatal error:  Class 'App\Http\Controllers\Controller' not found in /home/festival/public_html/goodlife.pe/club/app/Http/Controllers/Auth/RegisterController.php on line 11

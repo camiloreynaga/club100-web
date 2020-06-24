@@ -9,23 +9,23 @@
          </li>
          <li class="{{ Request::segment(2) === 'category' ? 'active' : '' }}">
             <a href="{{ Route('category.index') }}">
-            <i class="fa fa-list"></i> <span>Plan List</span>
+            <i class="fa fa-list"></i> <span>Planes</span>
             </a>
          </li>
 
          <li class="{{ Request::segment(2) === 'question' ? 'active' : '' }}">
             <a href="{{ Route('question.index') }}">
-            <i class="fa fa-question"></i> <span>User List</span>
+            <i class="fa fa-question"></i> <span>Lista de usuarios</span>
             </a>
          </li>
          <li class="{{ Request::segment(2) === 'tutorial' ? 'active' : '' }}">
             <a href="{{ Route('tutorial.index') }}">
-            <i class="fa fa-book"></i> <span>Notification List</span>
+            <i class="fa fa-book"></i> <span>Lista de notificaciones</span>
             </a>
          </li>
          <li class="{{ Request::segment(2) === 'notification' ? 'active' : '' }}">
             <a href="{{ Route('notification') }}">
-            <i class="fa fa-bell"></i> <span>Send Notification</span>
+            <i class="fa fa-bell"></i> <span>Enviar Señal</span>
             </a>
          </li>
          <!--

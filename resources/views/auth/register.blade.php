@@ -18,11 +18,12 @@ img {
                     <center>
                         <img src="http://goodlife.pe/club/uploads/app_logo.png" class="img-responsive" style="height: 100px;width: auto;" />
                     </center>
+                    <br>
                     <form class="form-horizontal" method="POST" action="{{ route('register') }}">
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Name</label>
+                            <label for="name" class="col-md-4 control-label">Nombres</label>
 
                             <div class="col-md-6">
                                 <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
@@ -64,7 +65,7 @@ img {
                         </div>
 
                         <div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
-                            <label for="phone" class="col-md-4 control-label">Phone</label>
+                            <label for="phone" class="col-md-4 control-label">Telefono</label>
 
                             <div class="col-md-6">
                                 <input id="phone" type="phone" class="form-control" name="phone" value="{{ old('phone') }}" required>
@@ -78,7 +79,7 @@ img {
                         </div>
 
                         <div class="form-group{{ $errors->has('user') ? ' has-error' : '' }}">
-                            <label for="user" class="col-md-4 control-label">User</label>
+                            <label for="user" class="col-md-4 control-label">Usuario</label>
 
                             <div class="col-md-6">
                                 <input id="user" type="user" class="form-control" name="user" value="{{ old('user') }}" required>
@@ -92,7 +93,7 @@ img {
                         </div>
 
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
+                            <label for="password" class="col-md-4 control-label">Contraseña</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" name="password" required>
@@ -106,13 +107,13 @@ img {
                         </div>
 
                         <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
+                            <label for="password-confirm" class="col-md-4 control-label">Repetir contraseña</label>
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
                             </div>
                         </div>
-
+                        
                         <div class="form-group">
                             <label for="turn" class="col-md-4 control-label">Turn</label>
 
@@ -125,13 +126,14 @@ img {
                         </div>
 
                         <div class="text-center">
-                            <p>Dias de las señales: Lunes Miercoles Viernes</p>
+                            <p>Días de las señales: Lunes Miercoles Viernes</p>
                             
                         </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
-                                    Register
+                                    Registrarme
                                 </button>
                             </div>
                         </div>

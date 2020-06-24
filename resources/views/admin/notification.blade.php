@@ -93,8 +93,7 @@
                                     
                                 </div>
                                 <div class="form-group">
-                                    
-                                   
+                                
                                     <label class="radio-inline">
                                         <input type="radio" name="porcentaje" value="%" checked >
                                         %

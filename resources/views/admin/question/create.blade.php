@@ -19,7 +19,7 @@
             <section class="panel">
                 @include('admin.partial.error')
                 <header class="panel-heading">
-                    Add New User
+                   Aregar nuevo usuario
                 </header>
                 <div class="panel-body">
                   @if($categories->count())

@@ -1,2 +1,0 @@
-[31-May-2020 20:25:22 UTC] PHP Fatal error:  Class 'Illuminate\Foundation\Auth\User' not found in /home/festival/public_html/goodlife.pe/club/app/User.php on line 9
-[31-May-2020 20:25:53 UTC] PHP Fatal error:  Class 'Illuminate\Database\Eloquent\Model' not found in /home/festival/public_html/goodlife.pe/club/app/Tutorial.php on line 8
