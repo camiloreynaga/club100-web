@@ -179,6 +179,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        LaravelFCM\FCMServiceProvider::class,
     ],
 
     /*
@@ -231,6 +232,8 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCMGroup' => LaravelFCM\Facades\FCMGroup::class, // Optional
     ],
 
 ];
