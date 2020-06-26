@@ -13,15 +13,10 @@ use App\AppNotification;
 use Auth;
 use App\Tutorial;
 use Maatwebsite\Excel\Facades\Excel;
-use LaravelFCM\Message\OptionsBuilder;
-use LaravelFCM\Message\PayloadDataBuilder;
-use LaravelFCM\Message\PayloadNotificationBuilder;
-use FCM;
 
 class PagesController extends Controller
 {
-    public function dashboard()
-    {
+    public function dashboard(){
         $questions = AppUser::orderBy('id', 'DESC')->limit(10)->get();
         $categories = Category::withCount('question')->orderBy('id', 'DESC')->limit(10)->get();
         $total_question = count(AppUser::all());
@@ -30,24 +25,20 @@ class PagesController extends Controller
         return view('admin.dashboard', compact('questions', 'categories', 'total_question', 'total_category'));
     }
 
-    public function settings()
-    {
+    public function settings(){
         return view('admin.settings');
     }
 
-    public function profile()
-    {
+    public function profile(){
         return view('admin.profile');
     }
 
-    public function tutorial()
-    {
+    public function tutorial(){
         $tutorials = AppNotification::orderBy('id', 'DESC')->get();
         return view('admin.tutorial.index', compact('tutorials'));
     }
 
-    public function addTutorial(Request $request)
-    {
+    public function addTutorial(Request $request){
         $this->validate($request, [
             'content' => 'required',
         ]);
@@ -55,32 +46,30 @@ class PagesController extends Controller
 
         $tutorial = Tutorial::orderBy('id', 'DESC')->limit(1)->get();
 
-        if (count($tutorial) > 0) {
+        if(count($tutorial) > 0){
             $id = $tutorial[0]->id;
             $tutorial = Tutorial::findorfail($id);
             $tutorial->update($data);
             return redirect('admin/tutorial')->withType('success')->withMessage('Tutorial Updated');
-        } else {
+        }
+        else{
             $tutorial = new Tutorial($data);
             $tutorial->save();
             return redirect('admin/tutorial')->withType('success')->withMessage('Tutorial Added');
         }
     }
 
-    public function notification()
-    {
+    public function notification(){
         $categories = Category::where('status', 1)->pluck('title', 'id');
         return view('admin.notification', compact('categories'));
     }
 
-    public function upload()
-    {
+    public function upload(){
         $categories = Category::where('status', 1)->pluck('title', 'id');
         return view('admin.upload', compact('categories'));
     }
 
-    public function uploadData(Request $request)
-    {
+    public function uploadData(Request $request){
         $this->validate($request, [
             'category_id' => 'required',
             'upload_file' => 'required'
@@ -89,7 +78,7 @@ class PagesController extends Controller
         $data = $request->all();
         \Session::put('category_id', $data['category_id']);
 
-        if ($request->file('upload_file')) {
+        if($request->file('upload_file')){
             $file = $request->file('upload_file');
             $mimes = $file->getClientMimeType();
             $name = time() . '.' . $file->getClientOriginalExtension();
@@ -103,19 +92,19 @@ class PagesController extends Controller
 
                 foreach ($reader->toArray() as $key => $question) {
                     $number_of_answer = 0;
-                    if (!empty($question['choice_a'])) {
+                    if(!empty($question['choice_a'])){
                         $number_of_answer++;
                     }
-                    if (!empty($question['choice_b'])) {
+                    if(!empty($question['choice_b'])){
                         $number_of_answer++;
                     }
-                    if (!empty($question['choice_c'])) {
+                    if(!empty($question['choice_c'])){
                         $number_of_answer++;
                     }
-                    if (!empty($question['choice_d'])) {
+                    if(!empty($question['choice_d'])){
                         $number_of_answer++;
                     }
-                    if (!empty($question['choice_e'])) {
+                    if(!empty($question['choice_e'])){
                         $number_of_answer++;
                     }
                     $question['number_of_answer'] = $number_of_answer;
@@ -128,7 +117,8 @@ class PagesController extends Controller
 
             unlink($data['upload_file']);
             return redirect('admin/upload')->withType('success')->withMessage('Questions Data Added');
-        } catch (\Exception $e) {
+        }
+        catch(\Exception $e){
             return redirect('admin/upload')->withType('danger')->withMessage($e->getMessage());
         }
     }
@@ -136,129 +126,81 @@ class PagesController extends Controller
     private function UnirNotificacion($notification_data)
     {
         //liga + hora + tipo apuesta 
-        $notification_data['title'] = $notification_data['liga'] . ' ' . $notification_data['title'] . ' ' . $notification_data['apuesta'];
-        $notification_data['message'] = $notification_data['message'] . ' ' . $notification_data['porcentaje'];
+        $notification_data['title']= $notification_data['liga'].' '.$notification_data['title'].' '.$notification_data['apuesta'];
+        $notification_data['message'] = $notification_data['message'] .' '.$notification_data['porcentaje'];
         return $notification_data;
+
     }
 
-    // public function sendNotification(Request $request)
-    // {
-
-    //     $notification_data = $request->all();
-    //     $notification_data = $this->UnirNotificacion($notification_data);
-
-    //     $notification = new AppNotification($notification_data);
-    //     $notification->save();
-
-    //     //obteniendo a todos los usuarios activos
-    //     if (isset($notification_data['grupo']) && $notification_data['grupo'] == 'on')
-    //         $flights = AppUser::where('status', 1)->get();
-    //     else
-    //         $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
-
-    //     //dd($flights);
-
-
-    //     $array_token = array();
-
-    //     foreach ($flights as $item) {
-    //         array_push($array_token, $item['token']);
-    //     }
-    //     array_push($array_token,'exVuMxi3JlA:APA91bFcq68Nfor8mQAFDzDKIzHpsyAlsHqVZe8yIS_iXLADpV24g1jE38a3WHYEf36CyBZeViiDUWE-W6hd3otB7biT2Zlqt8at__XJpYw4r9Wzx9Y0kDxTw85nWGTE-_KPUcvxSS5O');
-    //     $key = env("FIREBASE_API_SERVER_KEY", "");
-
-    //     if (!empty($key)) {
-    //         $this->validate($request, [
-    //             'title' => 'required',
-    //             'message' => 'required',
-    //         ]);
-
-    //         $data = array("to" => "/topics/" . env("FIREBASE_TOPIC", ""), "notification" => array(
-    //             "title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image']
-    //         ));
-    //         //$data_string = json_encode($data);
-    //         //return "The Json Data : ".$data_string;array_token
-
-    //         $url = 'https://fcm.googleapis.com/fcm/send';
-
-    //         $headers = array(
-    //             'Authorization: key=' . $key,
-    //             'Content-Type: application/json'
-    //         );
-    //         $fields = array(
-    //             'registration_ids'     => $array_token,
-    //             'data'            => array("title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image'])
-    //         );
-    //         $ch = curl_init();
-    //         curl_setopt($ch, CURLOPT_URL, $url);
-    //         curl_setopt($ch, CURLOPT_POST, true);
-    //         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    //         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    //         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
-    //         $result = curl_exec($ch);
-    //         echo $result;
-    //         exit;
-    //         if ($result === FALSE) {
-    //             die('Sending Push Notification Failed: ' . curl_error($ch));
-    //             return false;
-    //         }
-
-    //         curl_close($ch);
-
-    //         return redirect('admin/notification')->withType('success')->withMessage('Push Notification Sent!');
-    //     } else {
-    //         return 'Enter Your Firebase Server API Key on the .env File First!';
-    //     }
-    // }
-
-    public function sendNotification(Request $request)
-    {
+    public function sendNotification(Request $request){
 
         $notification_data = $request->all();
-        $notification_data = $this->UnirNotificacion($notification_data);
-
+        $notification_data= $this->UnirNotificacion($notification_data);
+        
         $notification = new AppNotification($notification_data);
         $notification->save();
-
+        
         //obteniendo a todos los usuarios activos
-        if (isset($notification_data['grupo']) && $notification_data['grupo'] == 'on')
+        if( isset($notification_data['grupo']) && $notification_data['grupo']=='on')
             $flights = AppUser::where('status', 1)->get();
         else
-            $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
+            $flights = AppUser::where(
+                ['category_id'=> $notification_data['category_id'],
+                'status'=>1])
+                ->get();
 
-        //dd($flights);
-
-
+        // dd($flights);
+        
         $array_token = array();
-
-        foreach ($flights as $item) {
+        foreach($flights as $item){
             array_push($array_token, $item['token']);
         }
+        $key = env("FIREBASE_API_SERVER_KEY", "");
 
+        if(!empty($key)){
+            $this->validate($request, [
+                'title' => 'required',
+                'message' => 'required',
+            ]);
 
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60 * 20);
+            $data = array("to" => "/topics/" . env("FIREBASE_TOPIC", ""), "notification" => array( "title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image']));
+            //$data_string = json_encode($data);
+            //return "The Json Data : ".$data_string;
 
-        $notificationBuilder = new PayloadNotificationBuilder($notification_data['title']);
-        $notificationBuilder->setBody($request['message'])
-            ->setSound('default');
+            $url = 'https://fcm.googleapis.com/fcm/send';
 
-        $dataBuilder = new PayloadDataBuilder();
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
+            $headers = array(
+                'Authorization: key=' . $key,
+                'Content-Type: application/json'
+            );
+            $fields = array
+            (
+                'registration_ids'     => $array_token,
+                'data'            => array( "title" => $notification_data['title'], "body" => $request['message'], "image" => $request['image'])
+            );
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
+            $result = curl_exec($ch);
+            if($result === FALSE){
+                die('Sending Push Notification Failed: ' . curl_error($ch));
+                return false;
+            }
 
-        // You must change it to get your tokens
-        $tokens = $array_token;
-        
-        $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
-      
+            curl_close($ch);
 
-        return redirect('admin/notification')->withType('success')->withMessage('Push Notification Sent!');
+            return redirect('admin/notification')->withType('success')->withMessage('Push Notification Sent!');
+        }
+        else{
+            return 'Enter Your Firebase Server API Key on the .env File First!';
+        }
     }
-    public function createUser(Request $request)
-    {
+
+    public function createUser(Request $request){
         $this->validate($request, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -274,8 +216,7 @@ class PagesController extends Controller
         return redirect('admin/profile')->withType('success')->withMessage('User Added');
     }
 
-    public function updatePassword(Request $request)
-    {
+    public function updatePassword(Request $request){
         $this->validate($request, [
             'uname' => 'required|string|max:255',
             'uemail' => 'required|string|email|max:255',
@@ -294,17 +235,16 @@ class PagesController extends Controller
         return redirect('admin/profile')->withType('success')->withMessage('Profile Updated');
     }
 
-    public function addUser(Request $request)
-    {
+    public function addUser(Request $request){
         $data = $request->all();
         $flights = AppUser::where('email', $data['email'])->get();
-        if (count($flights) == 0) {
+        if(count($flights) == 0){
             $category = new AppUser($data);
             $category->save();
             $ret = array(
                 "result" => "success"
             );
-        } else {
+        }else{
             $ret = array(
                 "result" => "exist"
             );
@@ -312,27 +252,26 @@ class PagesController extends Controller
 
         return $ret;
     }
-    public function login(Request $request)
-    {
+    public function login(Request $request){
 
         $data = $request->all();
         $matchThese = ['email' => $data['email'], 'password' => $data['password'], 'status' => 1];
 
         $flights = AppUser::where($matchThese)->get();
 
-        if (count($flights) == 0) {
+        if(count($flights) == 0){
             $ret = array(
                 "result" => "failed"
             );
-        } else {
+        }else{
             $device_token = "";
-            foreach ($flights as $item) {
+            foreach($flights as $item){
                 $name = $item['name'];
                 $category_id = $item['category_id'];
                 $device_token = $item['token'];
             }
 
-            if ($device_token == "") {
+            if($device_token == "") {
                 $flights = AppUser::where($matchThese)
                     ->update(['token' => $data['token']]);
                 $ret = array(
@@ -340,14 +279,14 @@ class PagesController extends Controller
                     "name" => $name,
                     "category_id" => "" . $category_id
                 );
-            } else {
-                if ($device_token == $data['token']) {
+            }else{
+                if($device_token == $data['token']){
                     $ret = array(
                         "result" => "success",
                         "name" => $name,
                         "category_id" => "" . $category_id
                     );
-                } else {
+                }else{
                     $ret = array(
                         "result" => "token is wrong"
                     );
@@ -357,10 +296,9 @@ class PagesController extends Controller
 
         return $ret;
     }
-    public function apiSignupUser($name, $email, $password, $token)
-    {
+    public function apiSignupUser($name, $email, $password, $token){
         $flights = AppUser::where('email', $email)->get();
-        if (count($flights) == 0) {
+        if(count($flights) == 0){
             $data = array(
                 'name' => $name,
                 'email' => $email,
@@ -372,7 +310,7 @@ class PagesController extends Controller
             $ret = array(
                 "result" => "success"
             );
-        } else {
+        }else{
             $ret = array(
                 "result" => "exist"
             );
@@ -380,16 +318,14 @@ class PagesController extends Controller
 
         return $ret;
     }
-    public function forgotPassword(Request $request)
-    {
-
+    public function forgotPassword(Request $request){
         $data = $request->all();
         $flights = AppUser::where('email', $data['email'])->get();
-        if (count($flights) == 0) {
+        if(count($flights) == 0){
             $ret = array(
                 "result" => "failed"
             );
-        } else {
+        }else{
             $new_password = rand(1000, 9999);
             $flights = AppUser::where('email', $data['email'])
                 ->update(['password' => $new_password]);
@@ -418,86 +354,74 @@ EOT;
 
         return $ret;
     }
-    public function getNotification(Request $request)
-    {
+    public function getNotification(Request $request){
         $data = $request->all();
         $categories = AppNotification::where('category_id', $data['category_id'])->orderBy('id', 'DESC')->get();;
         return $categories;
     }
-    public function apiShowCategories()
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowCategories(){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->orderBy('position', 'ASC')->withCount('children')->orderBy('title', 'ASC')->where('status', 1)->where('parent_id', null)->get();
         return $categories;
     }
 
-    public function apiShowCategoriesPremium()
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowCategoriesPremium(){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->orderBy('position', 'ASC')->withCount('children')->orderBy('title', 'ASC')->where('paid', 1)->where('status', 1)->where('parent_id', null)->get();
         return $categories;
     }
 
-    public function apiShowCategoriesFree()
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowCategoriesFree(){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->orderBy('position', 'ASC')->withCount('children')->orderBy('title', 'ASC')->where('paid', 0)->where('status', 1)->where('parent_id', null)->get();
         return $categories;
     }
 
-    public function apiShowChildCategories($id)
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowChildCategories($id){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->withCount('children')->orderBy('position', 'ASC')->where('status', 1)->where('parent_id', $id)->get();
         return $categories;
     }
 
-    public function apiShowChildCategoriesPremium($id)
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowChildCategoriesPremium($id){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->withCount('children')->orderBy('position', 'ASC')->where('paid', 1)->where('status', 1)->where('parent_id', $id)->get();
         return $categories;
     }
 
-    public function apiShowChildCategoriesFree($id)
-    {
-        $categories = Category::withCount(['question' => function ($q) {
+    public function apiShowChildCategoriesFree($id){
+        $categories = Category::withCount(['question'=>function($q) {
             return $q->where('status', 1);
         }])->withCount('children')->orderBy('position', 'ASC')->where('paid', 0)->where('status', 1)->where('parent_id', $id)->get();
         return $categories;
     }
 
-    public function apiShowSingleCategory($id)
-    {
+    public function apiShowSingleCategory($id){
         $category = Category::findorfail($id);
         return $category;
     }
 
-    public function apiShowSingleCategoryQuestion($id)
-    {
+    public function apiShowSingleCategoryQuestion($id){
         $questions = Category::findorfail($id)->question()->where('status', 1)->get();
         return $questions;
     }
 
-    public function apiShowQuestions()
-    {
+    public function apiShowQuestions(){
         $questions = Question::orderBy('id', 'ASC')->where('status', 1)->get();
         return $questions;
     }
 
-    public function apiShowSingleQuestion($id)
-    {
+    public function apiShowSingleQuestion($id){
         $question = Question::findorfail($id)->get();
         return $question;
     }
 
-    public function apiShowTutorial()
-    {
+    public function apiShowTutorial(){
         $tutorial = Tutorial::orderBy('id', 'DESC')->first();
         return $tutorial;
     }

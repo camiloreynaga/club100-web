@@ -10,8 +10,6 @@
             }
         </script>
     @endif
-    
-   
 
     <div class="row">
         <div class="col-md-12">
@@ -47,7 +45,7 @@
             <div class="input-group">
                 <div class="input-group-btn search-panel">
                     <button type="button" class="btn btn-disabled" data-toggle="dropdown">
-                        <span>Buscar por usuario: </span>
+                        <span>Search by User Name: </span>
                     </button>
                 </div>   
                 <input type="hidden" name="search_url" id="search_url" value="{{ URL::to('/') . '/admin/question/search/' }}">   
@@ -64,14 +62,14 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel">                
-                <header class="panel-heading"><meta charset="euc-jp">
+                <header class="panel-heading">
                     User List
                     <a href="{{ Route('question.create') }}" class="btn btn-primary pull-right" style="position: relative;top: -7px;right: 10px;">Add New</a>
                 </header>
                 <div class="panel-body table-responsive">
                     @if(count($questions) > 0)
                     <div class="table-responsive">
-                    <table class="table table-hover" id="questions"  >
+                    <table class="table table-hover" id="questions">
                         <thead>                          
                             <tr>
                                 <th>SL</th>
