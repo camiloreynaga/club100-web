@@ -10,6 +10,7 @@ use Route;
 use App\User;
 use App\AppUser;
 use App\AppNotification;
+use App\UserNotification;
 use Auth;
 use App\Tutorial;
 use Maatwebsite\Excel\Facades\Excel;
@@ -216,24 +217,20 @@ class PagesController extends Controller
     {
 
         $notification_data = $request->all();
-        $notification_data = $this->UnirNotificacion($notification_data);
-
-        $notification = new AppNotification($notification_data);
-        $notification->save();
-
+        $notification_data = $this->UnirNotificacion($notification_data);     
         //obteniendo a todos los usuarios activos
         if (isset($notification_data['grupo']) && $notification_data['grupo'] == 'on')
             $flights = AppUser::where('status', 1)->get();
         else
             $flights = AppUser::where('category_id', $notification_data['category_id'])->get();
 
-        //dd($flights);
-
-
         $array_token = array();
 
         foreach ($flights as $item) {
             array_push($array_token, $item['token']);
+            $notification_data['user_id'] = $item['email'];
+            $notification = new UserNotification($notification_data);
+            $notification->save();
         }
 
 
@@ -251,10 +248,11 @@ class PagesController extends Controller
 
         // You must change it to get your tokens
         $tokens = $array_token;
-        
+
         $downstreamResponse = FCM::sendTo($tokens, $option, $notification, $data);
-        print_r($downstreamResponse->numberSuccess());exit();
-      
+        print_r($downstreamResponse->numberSuccess());
+        exit();
+
 
         return redirect('admin/notification')->withType('success')->withMessage('Push Notification Sent!');
     }
@@ -422,7 +420,7 @@ EOT;
     public function getNotification(Request $request)
     {
         $data = $request->all();
-        $categories = AppNotification::where('category_id', $data['category_id'])->orderBy('id', 'DESC')->get();;
+        $categories = UserNotification::where('email', $data['email'])->orderBy('id', 'DESC')->get();;
         return $categories;
     }
     public function apiShowCategories()
